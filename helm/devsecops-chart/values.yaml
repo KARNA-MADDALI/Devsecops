@@ -1,0 +1,21 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/karna-maddali/devsecops
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  # If host is empty, Ingress will accept any host (useful for testing)
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
