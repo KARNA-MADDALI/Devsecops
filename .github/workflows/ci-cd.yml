@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - 'kubernetes/deployment.yaml'  # Ignore changes to this file to prevent loops
+      - 'helm/devsecops-chart/values.yaml'  # Prevent infinite loop
   pull_request:
     branches: [ main ]
 
@@ -146,8 +146,8 @@ jobs:
         id: set_output
         run: echo "image_tag=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
 
-  update-k8s:
-    name: Update Kubernetes Deployment
+  update-helm:
+    name: Update Helm values.yaml with new image
     runs-on: ubuntu-latest
     needs: [docker]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -162,25 +162,24 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-      - name: Update Kubernetes deployment file
+      - name: Update values.yaml with new image tag
         env:
           IMAGE_TAG: sha-${{ github.sha }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           REGISTRY: ghcr.io
         run: |
-          # Define the new image with tag (lowercase repository name)
+          # Create new image name
           NEW_IMAGE="${REGISTRY}/$(echo ${GITHUB_REPOSITORY} | tr '[:upper:]' '[:lower:]'):${IMAGE_TAG}"
 
-          # Update the deployment file directly
-          sed -i "s|image: ${REGISTRY}/.*|image: ${NEW_IMAGE}|g" kubernetes/deployment.yaml
+          # Update values.yaml (replace image.repository and image.tag)
+          sed -i "s|repository:.*|repository: ${REGISTRY}/$(echo ${GITHUB_REPOSITORY} | tr '[:upper:]' '[:lower:]')|g" helm/devsecops-chart/values.yaml
+          sed -i "s|tag:.*|tag: ${IMAGE_TAG}|g" helm/devsecops-chart/values.yaml
 
-          # Verify the change
-          echo "Updated deployment to use image: ${NEW_IMAGE}"
-          grep -A 1 "image:" kubernetes/deployment.yaml
+          echo "Updated Helm values.yaml with image: ${NEW_IMAGE}"
+          cat helm/devsecops-chart/values.yaml
 
       - name: Commit and push changes
         run: |
-          git add kubernetes/deployment.yaml
-          git commit -m "Update Kubernetes deployment with new image tag: ${{ needs.docker.outputs.image_tag }} [skip ci]" || echo "No changes to commit"
+          git add helm/devsecops-chart/values.yaml
+          git commit -m "Update Helm chart with new image: ${{ needs.docker.outputs.image_tag }} [skip ci]" || echo "No changes to commit"
           git push
-
