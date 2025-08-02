@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: ghcr.io/karna-maddali/devsecops
-  tag: latest
+  tag: sha-516217ecbc0c3cca5b8b5291c9254e9aa5ffeb6f
   pullPolicy: IfNotPresent
 
 service:
