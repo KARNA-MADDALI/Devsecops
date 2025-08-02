@@ -88,3 +88,63 @@ yarn build
 
 The build artifacts will be stored in the `dist/` directory.
 
+
+# DevSecOps Project – Interview Preparation
+
+## 📌 Project Overview
+The DevSecOps project focuses on building a secure CI/CD pipeline by integrating security tools at every stage of the software delivery lifecycle.
+
+### **Tech Stack**
+- **Version Control:** GitHub
+- **CI/CD:** Jenkins / Azure DevOps
+- **Security Tools:** SonarQube (SAST), Trivy (Image Scanning), OWASP ZAP (DAST), Checkov (IaC)
+- **Containerization:** Docker
+- **Orchestration:** Kubernetes (EKS)
+- **Deployment:** Helm Charts
+- **Ingress:** NGINX Ingress Controller + AWS Load Balancer
+
+---
+
+## ✅ Top 10 Interview Questions with Answers
+
+### **Q1: Give an overview of your DevSecOps project.**
+**Answer:**  
+"My project implemented a secure CI/CD pipeline for a web application using Jenkins/Azure DevOps. Security tools like SonarQube (code analysis), Trivy (container image scanning), and OWASP ZAP (DAST) were integrated. The app was containerized with Docker and deployed to Kubernetes (EKS) using Helm charts. This ensured security throughout the delivery pipeline."
+
+---
+
+### **Q2: Why did you choose DevSecOps instead of DevOps?**
+**Answer:**  
+"DevOps focuses on automation and speed, but security often comes later. DevSecOps integrates security into every stage, shifting it left to catch vulnerabilities early, reducing risk, and ensuring compliance without delaying delivery."
+
+---
+
+### **Q3: What was your role in the project?**
+**Answer:**  
+"I designed and implemented the CI/CD pipeline, integrated security tools, created Helm charts, deployed to EKS, and enforced security gates and policies."
+
+---
+
+### **Q4: Which CI/CD tools did you use and why?**
+**Answer:**  
+"Jenkins/Azure DevOps for automation, as they provide strong plugin support, scalability, and integration with security tools like SonarQube and Trivy."
+
+---
+
+### **Q5: How did you integrate security in your pipeline?**
+**Answer:**  
+- **Build Stage:** SonarQube for static code analysis (SAST)  
+- **Image Build Stage:** Trivy for scanning container images  
+- **Deploy Stage:** OWASP ZAP for dynamic testing (DAST)  
+- **Infrastructure as Code:** Checkov for scanning Terraform or Kubernetes manifests  
+
+---
+
+### **Q6: How did you deploy the application on Kubernetes?**
+**Answer:**  
+- Created an EKS cluster with `eksctl`  
+- Configured `kubectl` using `aws eks update-kubeconfig`  
+- Deployed using Helm:
+  ```bash
+  helm install devsecops-release . --namespace devsecops --create-namespace
+
